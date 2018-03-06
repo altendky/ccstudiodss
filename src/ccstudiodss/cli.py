@@ -11,7 +11,7 @@ def cli():
 
 @cli.command()
 @click.option('--ccxml', type=click.Path(exists=True), required=True)
-@click.option('--log', type=click.Path(), default='dss_py.xml')
+@click.option('--log', type=click.Path())
 @click.option('--binary', type=click.Path(exists=True), required=True)
 @click.option(
     '--trace-level',
@@ -31,7 +31,8 @@ def cli():
 def load(ccxml, log, binary, trace_level):
     script = com.ti.ccstudio.scripting.environment.ScriptingEnvironment.instance()
 
-    script.traceBegin(log, 'DefaultStylesheet.xsl')
+    if log is not None:
+        script.traceBegin(log, 'DefaultStylesheet.xsl')
 
     script.setScriptTimeout(150000)
 
