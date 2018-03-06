@@ -5,6 +5,8 @@ import subprocess
 
 import attr
 
+import ccstudiodss.jenv
+
 
 def join_path_lists(*path_lists):
     s = os.pathsep.join(
@@ -35,8 +37,10 @@ def jar_paths(base_path, relative=relative_jar_paths):
 
 @attr.s
 class Session:
-    cli_path = attr.ib()
     base_path = attr.ib()
+    cli_path = attr.ib(
+        default=os.path.join(ccstudiodss.jenv.jenv_bin_path(), 'ccstudiodss'),
+    )
 
     def load(self, ccxml, binary):
         env = dict(os.environ)
