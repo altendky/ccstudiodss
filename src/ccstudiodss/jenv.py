@@ -25,7 +25,11 @@ def jenv_bin_path():
 @click.option('--jython', default='jython')
 @click.option('--jenv-path', default=jenv_path)
 @click.option('--editable', is_flag=True)
-@click.option('--package', type=str, default='ccstudio-dss')
+@click.option(
+    '--package',
+    type=str,
+    default='git+https://github.com/ccstudio-dss#egg=ccstudio-dss',
+)
 def cli(jython, jenv_path, editable, package):
     click.echo('Creating Jython virtualenv: {}'.format(jenv_path))
 
