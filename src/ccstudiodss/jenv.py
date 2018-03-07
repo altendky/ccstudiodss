@@ -7,8 +7,8 @@ import click
 import ccstudiodss
 
 jenv_path = os.path.join(
-    os.path.split(os.path.dirname(ccstudiodss.__file__))[0],
-    'ccstudio-dss-jenv',
+    os.path.dirname(ccstudiodss.__file__),
+    'internal-jenv',
 )
 
 bin_names = ('bin', 'Scripts')
