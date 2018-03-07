@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import tempfile
+
 import click
 import com.ti.ccstudio.scripting.environment
 
@@ -31,17 +33,19 @@ def cli():
 def load(ccxml, log, binary, trace_level):
     script = com.ti.ccstudio.scripting.environment.ScriptingEnvironment.instance()
 
-    if log is not None:
-        script.traceBegin(log, 'DefaultStylesheet.xsl')
-
-    script.setScriptTimeout(150000)
-
     trace_level = getattr(
         com.ti.ccstudio.scripting.environment.TraceLevel,
         trace_level.upper(),
     )
+
     script.traceSetConsoleLevel(trace_level)
-    script.traceSetFileLevel(trace_level)
+
+    if log is not None:
+        script.traceBegin(log, 'DefaultStylesheet.xsl')
+
+        script.traceSetFileLevel(trace_level)
+
+    script.setScriptTimeout(150000)
 
     debugServer = script.getServer('DebugServer.1')
     debugServer.setConfig(ccxml)
