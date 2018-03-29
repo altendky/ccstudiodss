@@ -1,6 +1,3 @@
-# setuptools doesn't seem to like unicode 'src' in 2.7/Jython
-# from __future__ import unicode_literals
-
 import setuptools
 
 setuptools.setup(
@@ -8,18 +5,19 @@ setuptools.setup(
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     entry_points={
-        'console_scripts': [
-            'ccstudiodss = ccstudiodss.cli:cli',
-            'ccstudiodssjenv = ccstudiodss.jenv:cli',
+        'pytest11': [
+            'ccstudiodss = ccstudiodss.pytest [test]',
         ]
     },
     install_requires=[
-        'click',
-        'virtualenv',
+        'javabridge',
     ],
     extras_require={
         'dev': [
             'gitignoreio',
+        ],
+        'test': [
+            'pytest',
         ],
     },
 )
