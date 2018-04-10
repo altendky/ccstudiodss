@@ -25,7 +25,7 @@ def pytest_addoption(parser):
     group = parser.getgroup('ccstudiodss')
 
     group.addoption('--ccs-base-path')
-    group.addoption('--ccxml')
+    group.addoption('--ccxml', required=True)
 
 
 def pytest_configure(config):
