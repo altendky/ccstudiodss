@@ -13,8 +13,6 @@ class BasePathError(Exception):
 
 @pytest.fixture
 def ccstudiodss_session(pytestconfig):
-    import ccstudiodss.api
-
     ccxml = pytestconfig.getoption('ccxml')
 
     with ccstudiodss.api.Session(ccxml=ccxml) as session:
