@@ -5,8 +5,13 @@ import pathlib
 import attr
 import javabridge
 
+import ccstudiodss.utils
 
-def add_jars(base_path):
+
+def add_jars(base_path=None):
+    if base_path is None:
+        base_path = ccstudiodss.utils.find_base_path()
+
     for jar in jar_paths(base_path=base_path):
         if jar not in javabridge.JARS:
             javabridge.JARS.append(str(jar))
