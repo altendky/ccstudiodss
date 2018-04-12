@@ -28,7 +28,7 @@ windows_base_paths = tuple(
     for path in (
         *(
             pathlib.Path('c:')/os.sep/'ti'/'ccsv{}'.format(version)/'ccs_base'
-            for version in (8, 7, 6, 5)
+            for version in versions
         ),
     )
 )
