@@ -5,6 +5,9 @@ setuptools.setup(
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     entry_points={
+        'console_scripts': [
+            'dss = ccstudiodss.cli:cli',
+        ],
         'pytest11': [
             'ccstudiodss = ccstudiodss.pytest [test]',
         ]
