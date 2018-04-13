@@ -13,6 +13,7 @@ setuptools.setup(
         ]
     },
     install_requires=[
+        'attrs',
         'click',
         'javabridge',
     ],
