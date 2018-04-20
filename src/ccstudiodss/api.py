@@ -58,25 +58,32 @@ class Session:
     def __enter__(self):
         javabridge.start_vm(run_headless=True)
 
-        ScriptingEnvironment = javabridge.JClassWrapper(
-            'com.ti.ccstudio.scripting.environment.ScriptingEnvironment',
-        )
-        self.script = ScriptingEnvironment.instance()
+        try:
+            ScriptingEnvironment = javabridge.JClassWrapper(
+                'com.ti.ccstudio.scripting.environment.ScriptingEnvironment',
+            )
+            self.script = ScriptingEnvironment.instance()
 
-        self.debug_server = self.script.getServer("DebugServer.1")
-        self.debug_server.setConfig(str(self.ccxml))
+            self.debug_server = self.script.getServer("DebugServer.1")
+            self.debug_server.setConfig(str(self.ccxml))
 
-        self.debug_session = self.debug_server.openSession()
+            self.debug_session = self.debug_server.openSession()
 
-        self.debug_session.target.connect()
+            self.debug_session.target.connect()
+        except:
+            javabridge.kill_vm()
+
+            raise
 
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
-        self.debug_session.target.disconnect()
-        self.debug_server.stop()
+        try:
+            self.debug_session.target.disconnect()
+            self.debug_server.stop()
+        finally:
+            javabridge.kill_vm()
 
-        javabridge.kill_vm()
 
     @contextlib.contextmanager
     def temporary_timeout(self, timeout):
