@@ -17,7 +17,7 @@ linux_base_paths = tuple(
             for version in versions
         ),
         *( # in case the ccsv8 or such gets doubled up
-            pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'/'ccsv{}'.format(version)/'ccs_base'
+            pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
         *(
@@ -25,7 +25,7 @@ linux_base_paths = tuple(
             for version in versions
         ),
         *( # in case the ccsv8 or such gets doubled up
-            pathlib.Path.home()/'ti'/'ccsv{}'/'ccsv{}'.format(version)/'ccs_base'
+            pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
     )
@@ -36,6 +36,10 @@ windows_base_paths = tuple(
     for path in (
         *(
             pathlib.Path('c:')/os.sep/'ti'/'ccsv{}'.format(version)/'ccs_base'
+            for version in versions
+        ),
+        *( # in case the ccsv8 or such gets doubled up
+            pathlib.Path('c:')/os.sep/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
     )
