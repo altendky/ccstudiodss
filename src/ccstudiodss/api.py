@@ -84,7 +84,6 @@ class Session:
         finally:
             javabridge.kill_vm()
 
-
     @contextlib.contextmanager
     def temporary_timeout(self, timeout):
         old_timeout = self.script.getScriptTimeout()
@@ -98,4 +97,5 @@ class Session:
 
         self.debug_session.target.restart()
 
+    def run(self):
         self.debug_session.target.runAsynch()

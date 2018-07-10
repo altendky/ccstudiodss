@@ -25,3 +25,4 @@ def load(binary, ccxml, ccs_base_path):
 
     with ccstudiodss.api.Session(ccxml=ccxml) as session:
         session.load(binary=binary)
+        session.run()
