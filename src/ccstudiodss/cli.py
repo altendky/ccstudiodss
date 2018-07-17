@@ -1,4 +1,7 @@
+import pathlib
+
 import click
+
 import ccstudiodss.api
 import ccstudiodss.utils
 
@@ -8,10 +11,24 @@ def cli():
     pass
 
 
+def default_ccxml():
+    cwd = pathlib.Path().resolve()
+    for path in [cwd, *cwd.parents]:
+        found = tuple(path.glob('*.ccxml'))
+
+        if len(found) == 1:
+            return {'default': str(found[0])}
+        elif len(found) > 1:
+            break
+
+    return {'required': True}
+
+
 ccxml_option = click.option(
     '--ccxml',
     type=click.Path(exists=True, dir_okay=False),
-    required=True,
+    show_default=True,
+    **default_ccxml(),
 )
 
 ccs_base_path_option = click.option(
