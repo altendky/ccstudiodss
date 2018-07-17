@@ -99,3 +99,7 @@ class Session:
 
     def run(self):
         self.debug_session.target.runAsynch()
+
+    def restart(self):
+        self.debug_session.target.reset()
+        self.debug_session.target.runAsynch()
