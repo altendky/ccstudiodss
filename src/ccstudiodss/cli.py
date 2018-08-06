@@ -1,4 +1,6 @@
+import os
 import pathlib
+import webbrowser
 
 import click
 
@@ -61,3 +63,20 @@ def restart(ccxml, ccs_base_path):
 
     with ccstudiodss.api.Session(ccxml=ccxml) as session:
         session.restart()
+
+
+@cli.command()
+@ccs_base_path_option
+@click.option('--open/--show', 'open_', default=True)
+def docs(ccs_base_path, open_):
+    if ccs_base_path is None:
+        ccs_base_path = ccstudiodss.utils.find_base_path()
+
+    path = os.fspath(
+            ccs_base_path / 'scripting' / 'docs' / 'GettingStarted.htm',
+        )
+
+    if open_:
+        webbrowser.open(path)
+    else:
+        click.echo(path)
