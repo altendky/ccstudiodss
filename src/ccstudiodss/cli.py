@@ -6,6 +6,7 @@ import click
 
 import ccstudiodss.api
 import ccstudiodss.utils
+import ccstudiodss.build
 
 
 @click.group()
@@ -80,3 +81,6 @@ def docs(ccs_base_path, open_):
         webbrowser.open(path)
     else:
         click.echo(path)
+
+
+cli.add_command(ccstudiodss.build.cli, name='build')
