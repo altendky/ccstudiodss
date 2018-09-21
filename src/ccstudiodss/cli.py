@@ -6,7 +6,48 @@ import click
 
 import ccstudiodss.api
 import ccstudiodss.utils
-import ccstudiodss.build
+
+
+build_type_choices = ('incremental', 'full', 'clean')
+
+DSS_PROJECT_ROOT = 'DSS_PROJECT_ROOT'
+project_root_option = click.option(
+    '--project-root',
+    type=click.Path(exists=True, file_okay=False, resolve_path=True),
+    envvar=DSS_PROJECT_ROOT,
+    help=(
+         'Directory containing the .project file'
+         ' (${})'.format(DSS_PROJECT_ROOT)
+    ),
+)
+
+
+DSS_PROJECT_NAME = 'DSS_PROJECT_NAME'
+project_name_option = click.option(
+    '--project-name',
+    type=str,
+    envvar=DSS_PROJECT_NAME,
+    help=(
+         'Project name used for build artifacts'
+         ' (${})'.format(DSS_PROJECT_NAME)
+    ),
+)
+
+
+def default_base_path():
+    base_path = ccstudiodss.utils.find_base_path()
+    if base_path is None:
+        return {'required': True}
+    
+    return {'default': base_path}
+
+ccs_base_path_option = click.option(
+    '--ccs-base-path',
+    type=click.Path(exists=True, file_okay=False),
+    show_default=True,
+    **default_base_path(),
+    help='CCS base directory, e.g. /ti/ccsv8/ccs_base'
+)
 
 
 @click.group()
@@ -32,11 +73,6 @@ ccxml_option = click.option(
     type=click.Path(exists=True, dir_okay=False),
     show_default=True,
     **default_ccxml(),
-)
-
-ccs_base_path_option = click.option(
-    '--ccs-base-path',
-    type=click.Path(exists=True, file_okay=False),
 )
 
 
@@ -82,5 +118,46 @@ def docs(ccs_base_path, open_):
     else:
         click.echo(path)
 
+build_type_option = click.option(
+    '--build-type',
+    type=click.Choice(build_type_choices),
+    default=build_type_choices[0],
+    show_default=True,
+)
 
-cli.add_command(ccstudiodss.build.cli, name='build')
+target_option = click.option('--target', required=True)
+@cli.command()
+@target_option
+@build_type_option
+@project_root_option
+@project_name_option
+def build(target, build_type, project_root, project_name):
+    """Build the project using Code Composer Studio
+    """
+    ccstudiodss.api.build(
+        target=target, 
+        build_type=build_type,
+        project_root=project_root,
+        project_name=project_name,
+    )
+
+
+GRIDTIED_CCXML = 'GRIDTIED_CCXML'
+
+def create_ccxml_option(project_root):
+    paths = list(project_root.glob('*.ccxml'))
+    if len(paths) != 1:
+        default_or_required = {'required': True}
+    else:
+        default_or_required = {'default': paths[0]}
+        
+    ccxml_option = click.option(
+        '--ccxml',
+        type=click.Path(exists=True, dir_okay=False),
+        envvar=GRIDTIED_CCXML,
+        **default_or_required,
+        help='.ccxml device configuration file (${})'.format(GRIDTIED_CCXML),
+        show_default=True,
+        )
+
+    return ccxml_option
