@@ -1,14 +1,18 @@
+
 import contextlib
 import os
 import pathlib
 import subprocess
 import tempfile
+from enum import Enum
+from collections import namedtuple as ntup
 
 import attr
 import javabridge
 
 import ccstudiodss.utils
 
+build_type_choices = ('incremental', 'full', 'clean')
 
 def add_jars(base_path=None):
     if base_path is None:

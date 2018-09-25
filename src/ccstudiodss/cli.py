@@ -8,8 +8,6 @@ import ccstudiodss.api
 import ccstudiodss.utils
 
 
-build_type_choices = ('incremental', 'full', 'clean')
-
 DSS_PROJECT_ROOT = 'DSS_PROJECT_ROOT'
 project_root_option = click.option(
     '--project-root',
@@ -120,8 +118,8 @@ def docs(ccs_base_path, open_):
 
 build_type_option = click.option(
     '--build-type',
-    type=click.Choice(build_type_choices),
-    default=build_type_choices[0],
+    type=click.Choice(ccstudiodss.api.build_type_choices),
+    default=ccstudiodss.api.build_type_choices[0],
     show_default=True,
 )
 
