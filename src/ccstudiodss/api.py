@@ -4,8 +4,6 @@ import os
 import pathlib
 import subprocess
 import tempfile
-from enum import Enum
-from collections import namedtuple as ntup
 
 import attr
 import javabridge
