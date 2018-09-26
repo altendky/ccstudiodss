@@ -123,7 +123,10 @@ build_type_option = click.option(
     show_default=True,
 )
 
+
 target_option = click.option('--target', required=True)
+
+
 @cli.command()
 @target_option
 @build_type_option

@@ -1,4 +1,3 @@
-
 import contextlib
 import os
 import pathlib
@@ -107,6 +106,7 @@ class Session:
     def restart(self):
         self.debug_session.target.reset()
         self.debug_session.target.runAsynch()
+
 
 def build(target, build_type, project_root, project_name):
     if project_name is None:
