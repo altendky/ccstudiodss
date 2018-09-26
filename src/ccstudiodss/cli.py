@@ -13,6 +13,7 @@ project_root_option = click.option(
     '--project-root',
     type=click.Path(exists=True, file_okay=False, resolve_path=True),
     envvar=DSS_PROJECT_ROOT,
+    required=True,
     help=(
          'Directory containing the .project file'
          ' (${})'.format(DSS_PROJECT_ROOT)
