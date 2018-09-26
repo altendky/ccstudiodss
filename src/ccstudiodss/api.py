@@ -1,4 +1,5 @@
 import contextlib
+import enum
 import os
 import pathlib
 import subprocess
@@ -9,7 +10,12 @@ import javabridge
 
 import ccstudiodss.utils
 
-build_type_choices = ('incremental', 'full', 'clean')
+
+class BuildTypes(enum.Enum):
+    incremental = enum.auto()
+    full = enum.auto()
+    clean = enum.auto()
+
 
 def add_jars(base_path=None):
     if base_path is None:
@@ -139,7 +145,7 @@ def build(target, build_type, project_root, project_name):
                     '-application', 'com.ti.ccstudio.apps.projectBuild',
                     '-ccs.projects', project_name,
                     '-ccs.configuration', target,
-                    '-ccs.buildType', this_build_type,
+                    '-ccs.buildType', this_build_type.name,
                 ],
             )
 

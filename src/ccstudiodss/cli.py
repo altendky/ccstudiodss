@@ -117,10 +117,23 @@ def docs(ccs_base_path, open_):
     else:
         click.echo(path)
 
+
+# https://github.com/pallets/click/issues/605#issuecomment-277539425
+class EnumType(click.Choice):
+    def __init__(self, enum):
+        choices = [e.name for e in enum]
+        print('choices', choices)
+        super().__init__(choices)
+        self.enum = enum
+
+    def convert(self, value, param, ctx):
+        return self.enum[super().convert(value, param, ctx)]
+
+
 build_type_option = click.option(
     '--build-type',
-    type=click.Choice(ccstudiodss.api.build_type_choices),
-    default=ccstudiodss.api.build_type_choices[0],
+    type=EnumType(ccstudiodss.api.BuildTypes),
+    default=ccstudiodss.api.BuildTypes.incremental.name,
     show_default=True,
 )
 
