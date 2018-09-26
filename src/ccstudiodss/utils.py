@@ -16,7 +16,7 @@ linux_base_paths = tuple(
             pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
-        *( # in case the ccsv8 or such gets doubled up
+        *(
             pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
@@ -24,7 +24,7 @@ linux_base_paths = tuple(
             pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
-        *( # in case the ccsv8 or such gets doubled up
+        *(
             pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
@@ -59,3 +59,7 @@ def find_base_path():
     raise BasePathError('Unable to find base path in: {}'.format(
         ', '.join(repr(str(path)) for path in base_paths),
     ))
+
+
+def find_executable():
+    return find_base_path().parents[0]/'eclipse'/'ccstudio'

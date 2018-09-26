@@ -1,12 +1,16 @@
+
 import contextlib
 import os
 import pathlib
+import subprocess
+import tempfile
 
 import attr
 import javabridge
 
 import ccstudiodss.utils
 
+build_type_choices = ('incremental', 'full', 'clean')
 
 def add_jars(base_path=None):
     if base_path is None:
@@ -103,3 +107,42 @@ class Session:
     def restart(self):
         self.debug_session.target.reset()
         self.debug_session.target.runAsynch()
+
+def build(target, build_type, project_root, project_name):
+    if project_name is None:
+        project_name = pathlib.Path(project_root).parts[-1]
+
+    with tempfile.TemporaryDirectory() as d:
+        base_command = (
+            os.fspath(ccstudiodss.utils.find_executable()),
+            '-noSplash',
+            '-data', d,
+        )
+
+        try:
+            subprocess.run(
+                [
+                    *base_command,
+                    '-application', 'com.ti.ccstudio.apps.projectImport',
+                    '-ccs.location', str(project_root),
+                    '-ccs.renameTo', project_name,
+                ],
+                check=True,
+            )
+        except subprocess.CalledProcessError:
+            pass
+
+        for this_build_type in (build_type, 'incremental'):
+            completed_process = subprocess.run(
+                [
+                    *base_command,
+                    '-application', 'com.ti.ccstudio.apps.projectBuild',
+                    '-ccs.projects', project_name,
+                    '-ccs.configuration', target,
+                    '-ccs.buildType', this_build_type,
+                ],
+            )
+
+        completed_process.check_returncode()
+
+        return pathlib.Path(project_root)/target/(project_name + '.out')
