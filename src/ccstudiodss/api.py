@@ -138,7 +138,7 @@ def build(target, build_type, project_root, project_name):
         except subprocess.CalledProcessError:
             pass
 
-        for this_build_type in (build_type, 'incremental'):
+        for this_build_type in (build_type, BuildTypes.incremental):
             completed_process = subprocess.run(
                 [
                     *base_command,
