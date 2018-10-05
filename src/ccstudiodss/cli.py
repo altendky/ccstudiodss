@@ -1,3 +1,4 @@
+import functools
 import os
 import pathlib
 import webbrowser
@@ -176,3 +177,35 @@ def create_ccxml_option(project_root):
         )
 
     return ccxml_option
+
+
+def create_binary_option(variable_name):
+    return click.option(
+        '--embedded-binary', '--binary', 'binary',
+        type=click.Path(exists=True, dir_okay=False, resolve_path=True),
+        envvar=variable_name,
+        help='.out embedded binary file (${})'.format(variable_name),
+        show_default=True,
+    )
+
+
+binary_option = create_binary_option(
+    variable_name='DSS_BINARY',
+)
+
+
+def create_load_command(project_name, project_root):
+    variable_name = '{}_BINARY'.format(project_name.upper())
+
+    @cli.command()
+    @ccstudiodss.cli.create_binary_option(variable_name=variable_name)
+    @ccstudiodss.cli.create_ccxml_option(project_root)
+    @ccstudiodss.cli.ccs_base_path_option
+    def load(binary, ccxml, ccs_base_path):
+        ccstudiodss.api.add_jars(base_path=ccs_base_path)
+
+        with ccstudiodss.api.Session(ccxml=ccxml) as session:
+            session.load(binary=binary)
+            session.run()
+
+    return load
