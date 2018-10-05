@@ -1,4 +1,3 @@
-import functools
 import os
 import pathlib
 import webbrowser
@@ -77,22 +76,6 @@ ccxml_option = click.option(
 
 
 @cli.command()
-@click.option(
-    '--binary',
-    type=click.Path(exists=True, dir_okay=False),
-    required=True,
-)
-@ccxml_option
-@ccs_base_path_option
-def load(binary, ccxml, ccs_base_path):
-    ccstudiodss.api.add_jars(base_path=ccs_base_path)
-
-    with ccstudiodss.api.Session(ccxml=ccxml) as session:
-        session.load(binary=binary)
-        session.run()
-
-
-@cli.command()
 @ccxml_option
 @ccs_base_path_option
 def restart(ccxml, ccs_base_path):
@@ -123,7 +106,6 @@ def docs(ccs_base_path, open_):
 class EnumType(click.Choice):
     def __init__(self, enum):
         choices = [e.name for e in enum]
-        print('choices', choices)
         super().__init__(choices)
         self.enum = enum
 
@@ -158,49 +140,51 @@ def build(target, build_type, project_root, project_name):
     )
 
 
-GRIDTIED_CCXML = 'GRIDTIED_CCXML'
+def create_ccxml_option(project_name, project_root=None):
+    variable_name = '{}_CCXML'.format(project_name.upper())
 
-def create_ccxml_option(project_root):
+    if project_root is None:
+        project_root = pathlib.Path.cwd()
+
     paths = list(project_root.glob('*.ccxml'))
-    if len(paths) != 1:
-        default_or_required = {'required': True}
-    else:
+    if len(paths) == 1:
         default_or_required = {'default': paths[0]}
+    else:
+        default_or_required = {'required': True}
         
     ccxml_option = click.option(
         '--ccxml',
         type=click.Path(exists=True, dir_okay=False),
-        envvar=GRIDTIED_CCXML,
+        envvar=variable_name,
         **default_or_required,
-        help='.ccxml device configuration file (${})'.format(GRIDTIED_CCXML),
+        help='.ccxml device configuration file (${})'.format(variable_name),
         show_default=True,
         )
 
     return ccxml_option
 
 
-def create_binary_option(variable_name):
+def create_binary_option(project_name, required=False):
+    variable_name = '{}_BINARY'.format(project_name.upper())
+
     return click.option(
         '--embedded-binary', '--binary', 'binary',
         type=click.Path(exists=True, dir_okay=False, resolve_path=True),
         envvar=variable_name,
         help='.out embedded binary file (${})'.format(variable_name),
         show_default=True,
+        required=required,
     )
 
 
-binary_option = create_binary_option(
-    variable_name='DSS_BINARY',
-)
+binary_option = create_binary_option(project_name='dss')
 
 
-def create_load_command(project_name, project_root):
-    variable_name = '{}_BINARY'.format(project_name.upper())
-
+def create_load_command(project_name, project_root=None):
     @cli.command()
-    @ccstudiodss.cli.create_binary_option(variable_name=variable_name)
-    @ccstudiodss.cli.create_ccxml_option(project_root)
-    @ccstudiodss.cli.ccs_base_path_option
+    @create_binary_option(project_name=project_name)
+    @create_ccxml_option(project_name=project_name, project_root=project_root)
+    @ccs_base_path_option
     def load(binary, ccxml, ccs_base_path):
         ccstudiodss.api.add_jars(base_path=ccs_base_path)
 
@@ -209,3 +193,11 @@ def create_load_command(project_name, project_root):
             session.run()
 
     return load
+
+
+cli.add_command(
+    create_load_command(
+        project_name='dss',
+    ),
+    name='load',
+)
