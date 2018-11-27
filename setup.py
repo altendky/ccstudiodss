@@ -3,8 +3,14 @@ import setuptools
 import versioneer
 
 
+with open('README.rst') as f:
+    readme = f.read()
+
 setuptools.setup(
     name='ccstudiodss',
+    description="Build and load Code Composer Studio projects from the command line.",
+    long_description=readme,
+    long_description_content_type='text/x-rst',
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     version=versioneer.get_version(),
