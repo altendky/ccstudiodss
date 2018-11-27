@@ -15,11 +15,11 @@ Presently this is in use with Python 3.7.  It likely works with other versions. 
    :alt: supported Python versions
    :target: https://pypi.org/project/ccstudiodss/
 
-.. |Travis| image:: https://travis-ci.org/altendky/ccstudiodss.svg?branch=master
+.. |Travis| image:: https://travis-ci.org/altendky/ccstudiodss.svg?branch=develop
    :alt: Travis build status
    :target: https://travis-ci.org/altendky/ccstudiodss
 
-.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/gitignoreio/master.svg
+.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/gitignoreio/develop.svg
    :alt: source on GitHub
    :target: https://github.com/altendky/gitignoreio
 
