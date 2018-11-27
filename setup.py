@@ -8,7 +8,7 @@ with open('README.rst') as f:
 
 setuptools.setup(
     name='ccstudiodss',
-    description="Build and load Code Composer Studio projects from the command line.",
+    description="Build and load Code Composer Studio projects from the command line using the Java DSS library.",
     long_description=readme,
     long_description_content_type='text/x-rst',
     packages=setuptools.find_packages('src'),
