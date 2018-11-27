@@ -19,8 +19,8 @@ Presently this is in use with Python 3.7.  It likely works with other versions. 
    :alt: Travis build status
    :target: https://travis-ci.org/altendky/ccstudiodss
 
-.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/gitignoreio/develop.svg
+.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/ccstudiodss/develop.svg
    :alt: source on GitHub
-   :target: https://github.com/altendky/gitignoreio
+   :target: https://github.com/altendky/ccstudiodss
 
 .. _`altendky/docker-ccstudio8`: https://github.com/altendky/docker-ccstudio8
