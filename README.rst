@@ -3,7 +3,7 @@ CCStudio DSS
 
 |PyPI| |Pythons| |Travis| |GitHub|
 
-Build and load Code Composer Studio projects from the command line using the Java DSS library
+Build and load Code Composer Studio projects from the command line using the Java DSS library.
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/ccstudiodss.svg
    :alt: PyPI version
