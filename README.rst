@@ -5,6 +5,8 @@ CCStudio DSS
 
 Build and load Code Composer Studio projects from the command line using the Java DSS library.
 
+Presently this is in use with Python 3.7.  It likely works with other versions.  In general I am often willing to support as far as 2.7 and 3.4+.  There are no tests presently but we could likely make some leveraging the `altendky/docker-ccstudio8`_ repository.
+
 .. |PyPI| image:: https://img.shields.io/pypi/v/ccstudiodss.svg
    :alt: PyPI version
    :target: https://pypi.org/project/ccstudiodss/
@@ -20,3 +22,5 @@ Build and load Code Composer Studio projects from the command line using the Jav
 .. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/gitignoreio/master.svg
    :alt: source on GitHub
    :target: https://github.com/altendky/gitignoreio
+
+.. _`altendky/docker-ccstudio8`: https://github.com/altendky/docker-ccstudio8
