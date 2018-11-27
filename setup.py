@@ -15,6 +15,13 @@ setuptools.setup(
     package_dir={'': 'src'},
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
+    classifiers=[
+        # complete classifier list: https://pypi.org/pypi?%3Aaction=list_classifiers
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+    ],
     entry_points={
         'console_scripts': [
             'dss = ccstudiodss.cli:cli',
