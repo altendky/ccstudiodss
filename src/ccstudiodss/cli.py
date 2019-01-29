@@ -60,7 +60,7 @@ def default_ccxml():
         found = tuple(path.glob('*.ccxml'))
 
         if len(found) == 1:
-            return {'default': str(found[0])}
+            return {'default': ccstudiodss.utils.fspath(found[0])}
         elif len(found) > 1:
             break
 

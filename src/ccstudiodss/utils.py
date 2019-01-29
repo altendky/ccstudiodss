@@ -7,6 +7,8 @@ class BasePathError(Exception):
     pass
 
 
+fspath = getattr(os, 'fspath', str)
+
 versions = (8, 7, 6, 5)
 
 linux_base_paths = tuple(
@@ -57,7 +59,7 @@ def find_base_path():
             return path
 
     raise BasePathError('Unable to find base path in: {}'.format(
-        ', '.join(repr(str(path)) for path in base_paths),
+        ', '.join(repr(fspath(path)) for path in base_paths),
     ))
 
 

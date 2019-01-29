@@ -23,7 +23,7 @@ def add_jars(base_path=None):
 
     for jar in jar_paths(base_path=base_path):
         if jar not in javabridge.JARS:
-            javabridge.JARS.append(str(jar))
+            javabridge.JARS.append(ccstudiodss.utils.fspath(jar))
 
 
 def join_path_lists(*path_lists):
@@ -74,7 +74,7 @@ class Session:
             self.script = ScriptingEnvironment.instance()
 
             self.debug_server = self.script.getServer("DebugServer.1")
-            self.debug_server.setConfig(str(self.ccxml))
+            self.debug_server.setConfig(ccstudiodss.utils.fspath(self.ccxml))
 
             self.debug_session = self.debug_server.openSession()
 
@@ -102,7 +102,9 @@ class Session:
 
     def load(self, binary, timeout=150):
         with self.temporary_timeout(timeout):
-            self.debug_session.memory.loadProgram(str(binary))
+            self.debug_session.memory.loadProgram(
+                ccstudiodss.utils.fspath(binary)
+            )
 
         self.debug_session.target.restart()
 
@@ -120,7 +122,7 @@ def build(target, build_type, project_root, project_name):
 
     with tempfile.TemporaryDirectory() as d:
         base_command = (
-            os.fspath(ccstudiodss.utils.find_executable()),
+            ccstudiodss.utils.fspath(ccstudiodss.utils.find_executable()),
             '-noSplash',
             '-data', d,
         )
@@ -130,7 +132,7 @@ def build(target, build_type, project_root, project_name):
                 [
                     *base_command,
                     '-application', 'com.ti.ccstudio.apps.projectImport',
-                    '-ccs.location', str(project_root),
+                    '-ccs.location', ccstudiodss.utils.fspath(project_root),
                     '-ccs.renameTo', project_name,
                 ],
                 check=True,
@@ -146,6 +148,7 @@ def build(target, build_type, project_root, project_name):
                 '-ccs.configuration', target,
                 '-ccs.buildType', build_type.name,
             ],
+            check=True,
         )
 
         completed_process.check_returncode()
