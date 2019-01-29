@@ -121,23 +121,36 @@ build_type_option = click.option(
 )
 
 
-target_option = click.option('--target', required=True)
-
-
-@cli.command()
-@target_option
-@build_type_option
-@project_root_option
-@project_name_option
-def build(target, build_type, project_root, project_name):
-    """Build the project using Code Composer Studio
-    """
-    ccstudiodss.api.build(
-        target=target, 
-        build_type=build_type,
-        project_root=project_root,
-        project_name=project_name,
+def create_target_option(default=None):
+    return click.option(
+        '--target',
+        default=default,
+        required=default is None,
+        show_default=True,
     )
+
+
+
+def create_build_command(default_target=None):
+    @click.command()
+    @create_target_option(default=default_target)
+    @build_type_option
+    @project_root_option
+    @project_name_option
+    def build(target, build_type, project_root, project_name):
+        """Build the project using Code Composer Studio
+        """
+        ccstudiodss.api.build(
+            target=target,
+            build_type=build_type,
+            project_root=project_root,
+            project_name=project_name,
+        )
+
+    return build
+
+
+cli.add_command(create_build_command())
 
 
 def create_ccxml_option(project_name, project_root=None):
