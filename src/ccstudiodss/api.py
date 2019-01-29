@@ -127,20 +127,17 @@ def build(target, build_type, project_root, project_name):
             '-data', d,
         )
 
-        try:
-            subprocess.run(
-                [
-                    *base_command,
-                    '-application', 'com.ti.ccstudio.apps.projectImport',
-                    '-ccs.location', ccstudiodss.utils.fspath(project_root),
-                    '-ccs.renameTo', project_name,
-                ],
-                check=True,
-            )
-        except subprocess.CalledProcessError:
-            pass
+        subprocess.run(
+            [
+                *base_command,
+                '-application', 'com.ti.ccstudio.apps.projectImport',
+                '-ccs.location', ccstudiodss.utils.fspath(project_root),
+                '-ccs.renameTo', project_name,
+            ],
+            check=True,
+        )
 
-        completed_process = subprocess.run(
+        subprocess.run(
             [
                 *base_command,
                 '-application', 'com.ti.ccstudio.apps.projectBuild',
@@ -150,7 +147,5 @@ def build(target, build_type, project_root, project_name):
             ],
             check=True,
         )
-
-        completed_process.check_returncode()
 
         return pathlib.Path(project_root)/target/(project_name + '.out')
