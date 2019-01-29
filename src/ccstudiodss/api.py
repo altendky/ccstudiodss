@@ -138,16 +138,15 @@ def build(target, build_type, project_root, project_name):
         except subprocess.CalledProcessError:
             pass
 
-        for this_build_type in (build_type, BuildTypes.incremental):
-            completed_process = subprocess.run(
-                [
-                    *base_command,
-                    '-application', 'com.ti.ccstudio.apps.projectBuild',
-                    '-ccs.projects', project_name,
-                    '-ccs.configuration', target,
-                    '-ccs.buildType', this_build_type.name,
-                ],
-            )
+        completed_process = subprocess.run(
+            [
+                *base_command,
+                '-application', 'com.ti.ccstudio.apps.projectBuild',
+                '-ccs.projects', project_name,
+                '-ccs.configuration', target,
+                '-ccs.buildType', build_type.name,
+            ],
+        )
 
         completed_process.check_returncode()
 
