@@ -7,6 +7,10 @@ class BasePathError(Exception):
     pass
 
 
+class ExecutablePathError(Exception):
+    pass
+
+
 fspath = getattr(os, 'fspath', str)
 
 versions = (8, 7, 6, 5)
@@ -64,4 +68,15 @@ def find_base_path():
 
 
 def find_executable():
-    return find_base_path().parents[0]/'eclipse'/'ccstudio'
+    candidates = [
+        find_base_path().parents[0]/'eclipse'/file_name
+        for file_name in ('eclipsec.exe', 'ccstudio')
+    ]
+
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+
+    raise ExecutablePathError('Executable not found in: {}'.format(
+        ', '.join(repr(fspath(candidate)) for candidate in candidates)
+    ))
