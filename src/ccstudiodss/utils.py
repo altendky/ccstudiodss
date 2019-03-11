@@ -1,6 +1,8 @@
+import hashlib
 import os
 import pathlib
 import sys
+import tempfile
 
 
 class BasePathError(Exception):
@@ -80,3 +82,20 @@ def find_executable():
     raise ExecutablePathError('Executable not found in: {}'.format(
         ', '.join(repr(fspath(candidate)) for candidate in candidates)
     ))
+
+
+def generated_path_root():
+    return pathlib.Path(tempfile.gettempdir())/__name__.partition('.')[0]
+
+
+def generated_project_root(project_root):
+    hex_hash = hashlib.sha256(
+        fspath(project_root).encode('utf-8'),
+    ).hexdigest()
+
+    return generated_path_root() / hex_hash
+
+
+def generated_workspace_path(project_root):
+     return generated_project_root(project_root) / 'workspace'
+

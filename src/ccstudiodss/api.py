@@ -2,8 +2,8 @@ import contextlib
 import enum
 import os
 import pathlib
+import shutil
 import subprocess
-import tempfile
 
 import attr
 import javabridge
@@ -120,13 +120,19 @@ def build(target, build_type, project_root, project_name):
     if project_name is None:
         project_name = pathlib.Path(project_root).parts[-1]
 
-    with tempfile.TemporaryDirectory() as d:
-        base_command = (
-            ccstudiodss.utils.fspath(ccstudiodss.utils.find_executable()),
-            '-noSplash',
-            '-data', d,
-        )
+    workspace = ccstudiodss.utils.generated_workspace_path(
+        project_root=project_root,
+    )
 
+    workspace.mkdir(parents=True, exist_ok=True)
+
+    base_command = (
+        ccstudiodss.utils.fspath(ccstudiodss.utils.find_executable()),
+        '-noSplash',
+        '-data', ccstudiodss.utils.fspath(workspace),
+    )
+
+    if not any(True for _ in workspace.iterdir()):
         subprocess.run(
             [
                 *base_command,
@@ -137,15 +143,25 @@ def build(target, build_type, project_root, project_name):
             check=True,
         )
 
-        subprocess.run(
-            [
-                *base_command,
-                '-application', 'com.ti.ccstudio.apps.projectBuild',
-                '-ccs.projects', project_name,
-                '-ccs.configuration', target,
-                '-ccs.buildType', build_type.name,
-            ],
-            check=True,
-        )
+    subprocess.run(
+        [
+            *base_command,
+            '-application', 'com.ti.ccstudio.apps.projectBuild',
+            '-ccs.projects', project_name,
+            '-ccs.configuration', target,
+            '-ccs.buildType', build_type.name,
+        ],
+        check=True,
+    )
 
-        return pathlib.Path(project_root)/target/(project_name + '.out')
+    return pathlib.Path(project_root)/target/(project_name + '.out')
+
+
+def remove_generated_directory(project_root):
+    path = ccstudiodss.utils.generated_project_root(project_root=project_root)
+    shutil.rmtree(ccstudiodss.utils.fspath(path))
+
+
+def remove_generated_directories():
+    path = ccstudiodss.utils.generated_path_root()
+    shutil.rmtree(ccstudiodss.utils.fspath(path))
