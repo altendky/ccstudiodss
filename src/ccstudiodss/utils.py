@@ -15,7 +15,7 @@ class ExecutablePathError(Exception):
 
 fspath = getattr(os, 'fspath', str)
 
-versions = (8, 7, 6, 5)
+versions = (900, 8, 7, 6, 5)
 
 linux_base_paths = tuple(
     pathlib.Path(path)
@@ -25,11 +25,19 @@ linux_base_paths = tuple(
             for version in versions
         ),
         *(
+            pathlib.Path(os.sep)/'opt'/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base'
+            for version in versions
+        ),
+        *(
             pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base'
             for version in versions
         ),
         *(
             pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccs_base'
+            for version in versions
+        ),
+        *(
+            pathlib.Path.home()/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base'
             for version in versions
         ),
         *(
@@ -44,6 +52,10 @@ windows_base_paths = tuple(
     for path in (
         *(
             pathlib.Path('c:')/os.sep/'ti'/'ccsv{}'.format(version)/'ccs_base'
+            for version in versions
+        ),
+        *(
+            pathlib.Path('c:')/os.sep/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base'
             for version in versions
         ),
         *( # in case the ccsv8 or such gets doubled up
