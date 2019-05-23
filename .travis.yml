@@ -16,4 +16,4 @@ deploy:
     branch: develop
     tags: true
     condition: $TRAVIS_PYTHON_VERSION = 3.6
-  distributions: sdist
+  distributions: sdist bdist_wheel
