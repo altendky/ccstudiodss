@@ -15,7 +15,7 @@ class ExecutablePathError(Exception):
 
 fspath = getattr(os, 'fspath', str)
 
-versions = (900, 8, 7, 6, 5)
+versions = (901, 900, 8, 7, 6, 5)
 
 linux_base_paths = tuple(
     pathlib.Path(path)
