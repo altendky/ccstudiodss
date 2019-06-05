@@ -121,31 +121,77 @@ build_type_option = click.option(
 )
 
 
-def create_target_option(default=None):
+def create_target_option(default=None, project_root=None):
+    help = ''
+
+    if project_root is not None:
+        cproject = os.path.join(project_root, '.cproject')
+        targets = ccstudiodss.api.get_cproject_targets_from_path(cproject)
+        help += 'Known targets: {}'.format(', '.join(targets))
+
     return click.option(
         '--target',
         default=default,
         required=default is None,
         show_default=True,
+        help=help,
     )
 
 
+def create_targets_option(
+        default=None,
+        project_root=None,
+        add_all=True,
+):
+    help = ''
 
-def create_build_command(default_target=None):
+    if project_root is not None:
+        cproject = os.path.join(project_root, '.cproject')
+        targets = ccstudiodss.api.get_cproject_targets_from_path(cproject)
+        if add_all:
+            targets.append('all')
+        help += 'Known targets: {}'.format(', '.join(targets))
+
+    return click.option(
+        '--target',
+        'targets',
+        default=default,
+        multiple=True,
+        required=default is None,
+        show_default=True,
+        help=help,
+    )
+
+
+def create_build_command(default_target=None, project_root=None):
     @click.command()
-    @create_target_option(default=default_target)
+    @create_targets_option(
+        default=default_target,
+        project_root=project_root,
+        add_all=project_root is not None,
+    )
     @build_type_option
     @project_root_option
     @project_name_option
-    def build(target, build_type, project_root, project_name):
+    def build(targets, build_type, project_root, project_name):
         """Build the project using Code Composer Studio
         """
-        ccstudiodss.api.build(
-            target=target,
-            build_type=build_type,
-            project_root=project_root,
-            project_name=project_name,
-        )
+
+        if project_root is not None:
+            project_root = pathlib.Path(project_root)
+
+        if project_root is not None and 'all' in targets:
+            targets = ccstudiodss.api.get_cproject_targets_from_path(
+                path=project_root / '.cproject',
+            )
+
+        for target in targets:
+            ccstudiodss.api.build(
+                target=target,
+                build_type=build_type,
+                project_root=project_root,
+                project_name=project_name,
+            )
 
     return build
 
