@@ -7,6 +7,7 @@ import subprocess
 
 import attr
 import javabridge
+import lxml.etree
 
 import ccstudiodss.utils
 
@@ -165,3 +166,16 @@ def remove_generated_directory(project_root):
 def remove_generated_directories():
     path = ccstudiodss.utils.generated_path_root()
     shutil.rmtree(ccstudiodss.utils.fspath(path))
+
+
+def get_cproject_targets_from_path(path):
+    with open(path) as f:
+        return get_cproject_targets(f)
+
+
+def get_cproject_targets(file):
+    tree = lxml.etree.parse(file)
+    targets = tree.xpath(
+        '//storageModule[@moduleId="org.eclipse.cdt.core.settings"]/@name',
+    )
+    return targets

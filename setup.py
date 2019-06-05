@@ -34,6 +34,7 @@ setuptools.setup(
         'attrs',
         'click',
         'javabridge',
+        'lxml',
     ],
     extras_require={
         'dev': [
