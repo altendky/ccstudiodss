@@ -64,7 +64,7 @@ class Session:
     script = attr.ib(default=None)
     debug_server = attr.ib(default=None)
     debug_session = attr.ib(default=None)
-    device_string = attr.ib(default='.*')
+    device_pattern = attr.ib(default='.*')
 
     def __enter__(self):
         javabridge.start_vm(run_headless=True)
@@ -78,7 +78,7 @@ class Session:
             self.debug_server = self.script.getServer("DebugServer.1")
             self.debug_server.setConfig(ccstudiodss.utils.fspath(self.ccxml))
 
-            self.debug_session = self.debug_server.openSession(self.device_string)
+            self.debug_session = self.debug_server.openSession(self.device_pattern)
 
             self.debug_session.target.connect()
         except:
