@@ -239,16 +239,62 @@ def create_binary_option(project_name, required=False):
 binary_option = create_binary_option(project_name='dss')
 
 
+def create_device_pattern_option(
+        project_name,
+        default_pattern='.*',
+        required=False,
+):
+    variable_name = '{}_DEVICE_PATTERN'.format(project_name.upper())
+
+    return click.option(
+        '--device-pattern', '--device', 'device_pattern',
+        default=default_pattern,
+        type=str,
+        envvar=variable_name,
+        help='Regex pattern used to select the device/core (${})'.format(
+            variable_name,
+        ),
+        show_default=True,
+        required=required,
+    )
+
+
+def create_timeout_option(
+        project_name,
+        timeout=5*60,
+        required=False,
+):
+    variable_name = '{}_TIMEOUT'.format(project_name.upper())
+
+    return click.option(
+        '--timeout', 'timeout',
+        default=timeout,
+        type=str,
+        envvar=variable_name,
+        help='Time in seconds after which to abort (${})'.format(
+            variable_name,
+        ),
+        show_default=True,
+        required=required,
+    )
+
+
 def create_load_command(project_name, project_root=None):
     @cli.command()
     @create_binary_option(project_name=project_name)
     @create_ccxml_option(project_name=project_name, project_root=project_root)
+    @create_device_pattern_option(project_name=project_name)
+    @create_timeout_option(project_name=project_name)
     @ccs_base_path_option
-    def load(binary, ccxml, ccs_base_path):
+    def load(binary, ccxml, device_pattern, timeout, ccs_base_path):
         ccstudiodss.api.add_jars(base_path=ccs_base_path)
 
-        with ccstudiodss.api.Session(ccxml=ccxml) as session:
-            session.load(binary=binary)
+        session = ccstudiodss.api.Session(
+            ccxml=ccxml,
+            device_pattern=device_pattern,
+        )
+        with session:
+            session.load(binary=binary, timeout=timeout)
             session.run()
 
     return load
