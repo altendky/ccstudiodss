@@ -75,14 +75,17 @@ def generated_path_root():
     return pathlib.Path(tempfile.gettempdir())/__name__.partition('.')[0]
 
 
-def generated_project_root(project_root):
+def generated_project_root(project_root, suffix=None):
+    if suffix is None:
+        suffix = ''
+
     hex_hash = hashlib.sha256(
         fspath(project_root).encode('utf-8'),
     ).hexdigest()
 
-    return generated_path_root() / hex_hash
+    return generated_path_root() / (hex_hash + suffix)
 
 
-def generated_workspace_path(project_root):
-     return generated_project_root(project_root) / 'workspace'
+def generated_workspace_path(project_root, suffix=None):
+     return generated_project_root(project_root, suffix=suffix) / 'workspace'
 

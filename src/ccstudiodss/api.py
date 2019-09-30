@@ -118,12 +118,13 @@ class Session:
         self.debug_session.target.runAsynch()
 
 
-def build(target, build_type, project_root, project_name):
+def build(target, build_type, project_root, project_name, suffix=None):
     if project_name is None:
         project_name = pathlib.Path(project_root).parts[-1]
 
     workspace = ccstudiodss.utils.generated_workspace_path(
         project_root=project_root,
+        suffix=suffix,
     )
 
     workspace.mkdir(parents=True, exist_ok=True)
@@ -159,8 +160,11 @@ def build(target, build_type, project_root, project_name):
     return pathlib.Path(project_root)/target/(project_name + '.out')
 
 
-def remove_generated_directory(project_root):
-    path = ccstudiodss.utils.generated_project_root(project_root=project_root)
+def remove_generated_directory(project_root, suffix=None):
+    path = ccstudiodss.utils.generated_project_root(
+        project_root=project_root,
+        suffix=suffix,
+    )
     shutil.rmtree(ccstudiodss.utils.fspath(path))
 
 

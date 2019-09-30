@@ -33,6 +33,18 @@ project_name_option = click.option(
 )
 
 
+DSS_WORKSPACE_SUFFIX = 'DSS_WORKSPACE_SUFFIX'
+workspace_suffix_option = click.option(
+    '--workspace-suffix',
+    type=str,
+    envvar=DSS_WORKSPACE_SUFFIX,
+    help=(
+         'Suffix used when creating workspace such as for parallel builds in'
+         ' CI (${})'.format(DSS_WORKSPACE_SUFFIX)
+    ),
+)
+
+
 def default_base_path():
     base_path = ccstudiodss.utils.find_base_path()
     if base_path is None:
@@ -173,9 +185,19 @@ def create_build_command(default_target=None, project_root=None):
     @build_type_option
     @project_root_option
     @project_name_option
-    def build(targets, build_type, project_root, project_name):
+    @workspace_suffix_option
+    def build(
+            targets,
+            build_type,
+            project_root,
+            project_name,
+            workspace_suffix,
+    ):
         """Build the project using Code Composer Studio
         """
+
+        if workspace_suffix is not None:
+            workspace_suffix = '-' + workspace_suffix
 
         if project_root is not None:
             project_root = pathlib.Path(project_root)
@@ -191,6 +213,7 @@ def create_build_command(default_target=None, project_root=None):
                 build_type=build_type,
                 project_root=project_root,
                 project_name=project_name,
+                suffix=workspace_suffix,
             )
 
     return build
