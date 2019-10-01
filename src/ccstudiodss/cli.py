@@ -234,7 +234,7 @@ def create_build_command(default_target=None, project_root=None):
 cli.add_command(create_build_command())
 
 
-def build_list_targets_command(project_name, default_project_root=None):
+def create_list_targets_command(project_name, default_project_root=None):
     @click.command()
     @create_project_root_option(
         project_name=project_name,
@@ -259,7 +259,7 @@ def build_list_targets_command(project_name, default_project_root=None):
     return list_targets
 
 
-cli.add_command(build_list_targets_command(project_name='dss'))
+cli.add_command(create_list_targets_command(project_name='dss'))
 
 
 def create_ccxml_option(project_name, project_root=None):
