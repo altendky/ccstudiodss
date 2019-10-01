@@ -16,7 +16,7 @@ class ExecutablePathError(Exception):
 
 fspath = getattr(os, 'fspath', str)
 
-versions = ('910', '901', '900', '8', '7', '6', '5')
+versions = ('', '910', '901', '900', '8', '7', '6', '5')
 
 linux_base_paths = tuple(itertools.chain.from_iterable(
     (
