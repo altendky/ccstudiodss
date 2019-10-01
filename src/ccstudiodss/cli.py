@@ -8,17 +8,29 @@ import ccstudiodss.api
 import ccstudiodss.utils
 
 
+# backwards compatibility for a bit
 DSS_PROJECT_ROOT = 'DSS_PROJECT_ROOT'
-project_root_option = click.option(
-    '--project-root',
-    type=click.Path(exists=True, file_okay=False, resolve_path=True),
-    envvar=DSS_PROJECT_ROOT,
-    required=True,
-    help=(
-         'Directory containing the .project file'
-         ' (${})'.format(DSS_PROJECT_ROOT)
-    ),
-)
+
+
+def create_project_root_option(
+        project_name,
+        default=None,
+):
+    variable_name = '{}_PROJECT_ROOT'.format(project_name.upper())
+    return click.option(
+        '--project-root',
+        default=default,
+        type=click.Path(exists=True, file_okay=False, resolve_path=True),
+        envvar=variable_name,
+        required=True,
+        help=(
+            'Directory containing the .project file'
+            ' (${})'.format(variable_name)
+        ),
+    )
+
+
+project_root_option = create_project_root_option(project_name='dss')
 
 
 DSS_PROJECT_NAME = 'DSS_PROJECT_NAME'
@@ -220,6 +232,34 @@ def create_build_command(default_target=None, project_root=None):
 
 
 cli.add_command(create_build_command())
+
+
+def build_list_targets_command(project_name, default_project_root=None):
+    @click.command()
+    @create_project_root_option(
+        project_name=project_name,
+        default=default_project_root,
+    )
+    def list_targets(
+            project_root,
+    ):
+        """List the available project targets
+        """
+
+        if project_root is not None:
+            project_root = pathlib.Path(project_root)
+
+        targets = ccstudiodss.api.get_cproject_targets_from_path(
+            path=project_root / '.cproject',
+        )
+
+        for target in targets:
+            click.echo(target)
+
+    return list_targets
+
+
+cli.add_command(build_list_targets_command(project_name='dss'))
 
 
 def create_ccxml_option(project_name, project_root=None):
