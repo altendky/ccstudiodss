@@ -16,19 +16,22 @@ class ExecutablePathError(Exception):
 
 fspath = getattr(os, 'fspath', str)
 
-versions = ('', '910', '901', '900', '8', '7', '6', '5')
+versions = ('910', '901', '900', '8', '7', '6', '5')
 
-linux_base_paths = tuple(itertools.chain.from_iterable(
-    (
-        pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccs_base',
-        pathlib.Path(os.sep)/'opt'/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base',
-        pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base',
-        pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccs_base',
-        pathlib.Path.home()/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base',
-        pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base',
-    )
-    for version in versions
-))
+linux_base_paths = (
+    pathlib.Path(os.sep)/'opt'/'ti'/'ccs'/'ccs_base',
+    *itertools.chain.from_iterable(
+        (
+            pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccs_base',
+            pathlib.Path(os.sep)/'opt'/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base',
+            pathlib.Path(os.sep)/'opt'/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base',
+            pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccs_base',
+            pathlib.Path.home()/'ti'/'ccs{}'.format(version)/'ccs'/'ccs_base',
+            pathlib.Path.home()/'ti'/'ccsv{}'.format(version)/'ccsv{}'.format(version)/'ccs_base',
+        )
+        for version in versions
+    ),
+)
 
 windows_base_paths = tuple(itertools.chain.from_iterable(
     (
