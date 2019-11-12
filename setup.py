@@ -33,10 +33,12 @@ setuptools.setup(
     install_requires=[
         'attrs',
         'click',
-        'javabridge',
         'lxml',
     ],
     extras_require={
+        'java': [
+            'javabridge',
+        ],
         'dev': [
             'gitignoreio',
         ],

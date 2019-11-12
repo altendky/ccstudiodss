@@ -6,7 +6,12 @@ import shutil
 import subprocess
 
 import attr
-import javabridge
+try:
+    import javabridge
+except ImportError:
+    javabridge = None
+
+
 import lxml.etree
 
 import ccstudiodss.utils
