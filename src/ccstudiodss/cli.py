@@ -187,10 +187,10 @@ def create_targets_option(
     )
 
 
-def create_build_command(default_target=None, project_root=None):
+def create_build_command(default_targets=None, project_root=None):
     @click.command()
     @create_targets_option(
-        default=default_target,
+        default=default_targets,
         project_root=project_root,
         add_all=project_root is not None,
     )
