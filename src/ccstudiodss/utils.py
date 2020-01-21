@@ -16,7 +16,7 @@ class ExecutablePathError(Exception):
 
 fspath = getattr(os, 'fspath', str)
 
-versions = ('920', '910', '901', '900', '8', '7', '6', '5')
+versions = ('930', '920', '910', '901', '900', '8', '7', '6', '5')
 
 linux_base_paths = (
     pathlib.Path(os.sep)/'opt'/'ti'/'ccs'/'ccs_base',
