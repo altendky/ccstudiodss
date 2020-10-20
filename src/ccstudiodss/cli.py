@@ -205,8 +205,7 @@ def create_build_command(default_targets=None, project_root=None):
             project_name,
             workspace_suffix,
     ):
-        """Build the project using Code Composer Studio
-        """
+        """Build the project using Code Composer Studio."""
 
         if workspace_suffix is not None:
             workspace_suffix = '-' + workspace_suffix
@@ -350,6 +349,8 @@ def create_load_command(project_name, project_root=None):
     @create_timeout_option(project_name=project_name)
     @ccs_base_path_option
     def load(binary, ccxml, device_pattern, timeout, ccs_base_path):
+        """Load the projcet to the board."""
+
         ccstudiodss.api.add_jars(base_path=ccs_base_path)
 
         session = ccstudiodss.api.Session(
