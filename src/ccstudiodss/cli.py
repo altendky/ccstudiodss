@@ -341,11 +341,14 @@ def create_timeout_option(
     )
 
 
-def create_load_command(project_name, project_root=None):
+def create_load_command(project_name, project_root=None, device_pattern_option=None):
+    if device_pattern_option is None:
+        device_pattern_option = create_device_pattern_option(project_name=project_name)
+
     @cli.command()
     @create_binary_option(project_name=project_name)
     @create_ccxml_option(project_name=project_name, project_root=project_root)
-    @create_device_pattern_option(project_name=project_name)
+    @device_pattern_option
     @create_timeout_option(project_name=project_name)
     @ccs_base_path_option
     def load(binary, ccxml, device_pattern, timeout, ccs_base_path):
