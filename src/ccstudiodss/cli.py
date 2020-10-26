@@ -171,10 +171,14 @@ def create_targets_option(
 
     if project_root is not None:
         cproject = os.path.join(project_root, '.cproject')
-        targets = ccstudiodss.api.get_cproject_targets_from_path(cproject)
-        if add_all:
-            targets.append('all')
-        help += 'Known targets: {}'.format(', '.join(targets))
+        try:
+            targets = ccstudiodss.api.get_cproject_targets_from_path(cproject)
+        except FileNotFoundError:
+            pass
+        else:
+            if add_all:
+                targets.append('all')
+            help += 'Known targets: {}'.format(', '.join(targets))
 
     return click.option(
         '--target',
