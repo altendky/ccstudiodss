@@ -78,11 +78,11 @@ jobs:
       - ci
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
       - name: Download all wheels
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
-          name: pyqt5_tools-all_wheels
+          name: artifacts
           path: dist
       - name: Install Python packages
         run: |
