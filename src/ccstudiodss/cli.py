@@ -162,7 +162,7 @@ def create_target_option(default=None, project_root=None):
     )
 
 
-def create_targets_option(
+    def create_targets_option(
         default=None,
         project_root=None,
         add_all=True,
