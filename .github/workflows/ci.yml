@@ -26,7 +26,13 @@ jobs:
         python:
           - name: 3.9
             docker: 3.9
-
+        bitness:
+#          - name: x32
+#            action: x86
+#            cibuildwheel: '*32*'
+          - name: x64
+            action: x64
+            cibuildwheel: '*64*'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
