@@ -13,7 +13,6 @@ except ImportError:
 
 if jpype is not None:
     import jpype.imports
-    import com.ti.ccstudio.scripting.environment
 
 import lxml.etree
 
@@ -76,6 +75,7 @@ class Session:
 
     def __enter__(self):
         jpype.startJVM()
+        import com.ti.ccstudio.scripting.environment
 
         try:
             self.script = (
