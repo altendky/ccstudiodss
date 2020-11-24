@@ -37,7 +37,7 @@ setuptools.setup(
     ],
     extras_require={
         'java': [
-            'jpype1 >= 1.1.2, 1.*',
+            'jpype1 >= 1.1.2, == 1.*',
         ],
         'dev': [
             'gitignoreio',
