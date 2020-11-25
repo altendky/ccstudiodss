@@ -63,8 +63,9 @@ jobs:
           dist = pathlib.Path.cwd() / 'dist'
           [wheel] = dist.glob('*.whl')
 
-          print('::set-env name=WHEEL_PATH::{}'.format(fspath(wheel)))
-          print('::set-env name=WHEEL_STEM::{}'.format(wheel.stem))
+          with open(os.environ['GITHUB_ENV'], 'a') as github_env:
+              github_env.write('WHEEL_PATH={}\n'.format(fspath(wheel)))
+              github_env.write('WHEEL_STEM={}\n'.format(wheel.stem))
       - name: Archive
         uses: actions/upload-artifact@v2
         with:
