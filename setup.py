@@ -37,7 +37,7 @@ setuptools.setup(
     ],
     extras_require={
         'java': [
-            'javabridge',
+            'jpype1 >= 1.1.2, == 1.*',
         ],
         'dev': [
             'gitignoreio',

@@ -7,10 +7,12 @@ import subprocess
 
 import attr
 try:
-    import javabridge
+    import jpype
 except ImportError:
-    javabridge = None
+    jpype = None
 
+if jpype is not None:
+    import jpype.imports
 
 import lxml.etree
 
@@ -28,8 +30,8 @@ def add_jars(base_path=None):
         base_path = ccstudiodss.utils.find_base_path()
 
     for jar in jar_paths(base_path=base_path):
-        if jar not in javabridge.JARS:
-            javabridge.JARS.append(ccstudiodss.utils.fspath(jar))
+        if jar not in jpype.getClassPath().split(os.pathsep):
+            jpype.addClassPath(ccstudiodss.utils.fspath(jar))
 
 
 def join_path_lists(*path_lists):
@@ -72,13 +74,13 @@ class Session:
     device_pattern = attr.ib(default='.*')
 
     def __enter__(self):
-        javabridge.start_vm(run_headless=True)
+        jpype.startJVM()
+        import com.ti.ccstudio.scripting.environment
 
         try:
-            ScriptingEnvironment = javabridge.JClassWrapper(
-                'com.ti.ccstudio.scripting.environment.ScriptingEnvironment',
+            self.script = (
+                com.ti.ccstudio.scripting.environment.ScriptingEnvironment.instance()
             )
-            self.script = ScriptingEnvironment.instance()
 
             self.debug_server = self.script.getServer("DebugServer.1")
             self.debug_server.setConfig(ccstudiodss.utils.fspath(self.ccxml))
@@ -87,7 +89,7 @@ class Session:
 
             self.debug_session.target.connect()
         except:
-            javabridge.kill_vm()
+            jpype.shutdownJVM()
 
             raise
 
@@ -98,7 +100,7 @@ class Session:
             self.debug_session.target.disconnect()
             self.debug_server.stop()
         finally:
-            javabridge.kill_vm()
+            jpype.shutdownJVM()
 
     @contextlib.contextmanager
     def temporary_timeout(self, timeout):
