@@ -369,7 +369,7 @@ def create_load_command(project_name, project_root=None, device_pattern_option=N
     @create_timeout_option(project_name=project_name)
     @ccs_base_path_option
     def load(binary, ccxml, device_pattern, timeout, ccs_base_path):
-        """Load the projcet to the board."""
+        """Load the project to the board."""
 
         ccstudiodss.api.add_jars(base_path=ccs_base_path)
 
