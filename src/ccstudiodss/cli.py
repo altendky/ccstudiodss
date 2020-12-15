@@ -8,10 +8,6 @@ import ccstudiodss.api
 import ccstudiodss.utils
 
 
-# backwards compatibility for a bit
-DSS_PROJECT_ROOT = 'DSS_PROJECT_ROOT'
-
-
 def create_project_root_option(
         project_name,
         default=None,
@@ -22,7 +18,7 @@ def create_project_root_option(
         default=default,
         type=click.Path(exists=True, file_okay=False, resolve_path=True),
         envvar=variable_name,
-        required=True,
+        required=default is None,
         help=(
             'Directory containing the .project file'
             ' (${})'.format(variable_name)
@@ -33,28 +29,38 @@ def create_project_root_option(
 project_root_option = create_project_root_option(project_name='dss')
 
 
-DSS_PROJECT_NAME = 'DSS_PROJECT_NAME'
-project_name_option = click.option(
-    '--project-name',
-    type=str,
-    envvar=DSS_PROJECT_NAME,
-    help=(
-         'Project name used for build artifacts'
-         ' (${})'.format(DSS_PROJECT_NAME)
-    ),
-)
+def create_project_name_option(project_name):
+    variable_name = '{}_PROJECT_NAME'.format(project_name.upper())
+
+    return click.option(
+        '--project-name',
+        type=str,
+        envvar=variable_name,
+        help=(
+             'Project name used for build artifacts'
+             ' (${})'.format(variable_name)
+        ),
+    )
 
 
-DSS_WORKSPACE_SUFFIX = 'DSS_WORKSPACE_SUFFIX'
-workspace_suffix_option = click.option(
-    '--workspace-suffix',
-    type=str,
-    envvar=DSS_WORKSPACE_SUFFIX,
-    help=(
-         'Suffix used when creating workspace such as for parallel builds in'
-         ' CI (${})'.format(DSS_WORKSPACE_SUFFIX)
-    ),
-)
+project_name_option = create_project_name_option(project_name='dss')
+
+
+def create_workspace_suffix_option(project_name):
+    variable_name = '{}_WORKSPACE_SUFFIX'.format(project_name.upper())
+
+    return click.option(
+        '--workspace-suffix',
+        type=str,
+        envvar=variable_name,
+        help=(
+             'Suffix used when creating workspace such as for parallel builds in'
+             ' CI (${})'.format(variable_name)
+        ),
+    )
+
+
+workspace_suffix_option = create_workspace_suffix_option(project_name='dss')
 
 
 def default_base_path():
@@ -191,7 +197,11 @@ def create_targets_option(
     )
 
 
-def create_build_command(default_targets=None, project_root=None):
+def create_build_command(
+        project_name,
+        default_targets=None,
+        project_root=None,
+):
     @click.command()
     @create_targets_option(
         default=default_targets,
@@ -199,9 +209,12 @@ def create_build_command(default_targets=None, project_root=None):
         add_all=project_root is not None,
     )
     @build_type_option
-    @project_root_option
-    @project_name_option
-    @workspace_suffix_option
+    @create_project_root_option(
+        project_name=project_name,
+        default=project_root,
+    )
+    @create_project_name_option(project_name=project_name)
+    @create_workspace_suffix_option(project_name=project_name)
     def build(
             targets,
             build_type,
@@ -234,7 +247,7 @@ def create_build_command(default_targets=None, project_root=None):
     return build
 
 
-cli.add_command(create_build_command())
+cli.add_command(create_build_command(project_name='dss'))
 
 
 def create_list_targets_command(project_name, default_project_root=None):
